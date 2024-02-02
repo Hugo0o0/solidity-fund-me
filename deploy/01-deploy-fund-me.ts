@@ -10,7 +10,7 @@ const func: DeployFunction = async ({ getNamedAccounts, deployments }) => {
   const { deployer } = await getNamedAccounts();
   const isDevChain = devChains.includes(network.name);
   if (isDevChain) {
-    deployToDevChain(deployments, deployer);
+    await deployToDevChain(deployments, deployer);
   } else {
     const fundMe = await deployToActualChain(deployments, deployer);
     console.log(network.name);

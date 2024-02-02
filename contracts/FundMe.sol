@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.8;
 
-import './PriceConverter.sol';
-import '@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol';
+import "./PriceConverter.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 error FundMe__Unauthorized();
 error FundMe__DidNotSendEnoughEth();
@@ -37,9 +37,7 @@ contract FundMe {
     }
 
     function fund() public payable {
-        if (msg.value.getConversionRate(priceFeed) > MIN_USD) {
-            revert FundMe__DidNotSendEnoughEth();
-        }
+        require(msg.value >= MIN_USD, "Not enough ETH to fund");
         funders.push(msg.sender);
         funderBalance[msg.sender] += msg.value;
     }
@@ -52,7 +50,7 @@ contract FundMe {
 
         (bool callSuccess, ) = payable(msg.sender).call{
             value: address(this).balance
-        }('');
-        require(callSuccess, 'Call Failed');
+        }("");
+        require(callSuccess, "Call Failed");
     }
 }
